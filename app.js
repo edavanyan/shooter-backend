@@ -12,6 +12,6 @@ app.listen(port, function(error) {
 })
 
 app.get('/name', function(req, res) {
-    res.send('edgar');
+    res.send('qaq ker');
     res.end();
 });
