@@ -9,8 +9,9 @@ function initWebSocket(server) {
 
     wss.on('connection', (socket) => {
         socket.on('message', (data) => {
-            console.log(data);
-            socket.send(data);
+            let json = JSON.parse(data.toString())
+            console.log(json);
+            socket.send(json.sender);
         })
     })
 

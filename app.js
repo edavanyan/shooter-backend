@@ -13,8 +13,8 @@ const server = app.listen(port, function(error) {
     }
 });
 
-app.get('/name', function(req, res) {
-    res.send('qaq ker');
+app.get('/test', function(req, res) {
+    res.send('hello');
     res.end();
 });
 
