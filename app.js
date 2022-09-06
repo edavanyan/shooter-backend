@@ -5,7 +5,7 @@ const port = process.env.PORT || 8080;
 const index = require('./index')
 
 app.set("port", port);
-app.listen(port, function(error) {
+const server = app.listen(port, function(error) {
     if (error) {
         console.log("error: ", error);
     } else {
@@ -14,8 +14,8 @@ app.listen(port, function(error) {
 });
 
 app.get('/name', function(req, res) {
-    res.send({port : port});
+    res.send('qaq ker');
     res.end();
 });
 
-index.initWebSocket(app);
+index.initWebSocket(server);
