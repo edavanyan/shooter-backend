@@ -30,12 +30,7 @@ function initWebSocket(server) {
                     message : "map",
                     players : sockets
                 }
-
-                for(var id in connections) {
-                    if (id !== socket.id) {
-                        connections[id].send(data.toString());
-                    }
-                }
+                socket.send(JSON.stringify(data));
             }
             
             if (jsonData.message === "move") {
