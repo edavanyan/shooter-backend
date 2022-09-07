@@ -49,6 +49,10 @@ function initWebSocket(server) {
         socket.on('disconnect', (data) => {
             delete connections[socket.id];
         })
+
+        socket.on('close', (data) => {
+            delete connections[socket.id];
+        })
     })
     
     wss.on('listening', () => {
