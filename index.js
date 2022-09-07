@@ -1,6 +1,6 @@
 const {Server} = require("ws");
 
-const connections = []
+const connections = {}
 
 function initWebSocket(server) {
     const wss = new Server({ server }, () => {
@@ -10,17 +10,49 @@ function initWebSocket(server) {
     console.log("init web socket: " + server);
 
     wss.on('connection', (socket) => {
-        connections.push(socket)
 
         socket.on('message', (data) => {
+
             let jsonData = JSON.parse(data.toString());
-            for( var i = 0; i < connections.length; i++) { 
-                connections[i].send(data.toString());
+
+            if (jsonData.message === "join") {
+                socket.id = jsonData.id;
+                connections[jsonData.id] = socket;
+
+                let sockets = {}
+                for(var id in connections) {
+                    if (id !== socket.id) {
+                        sockets[id] = connections[id].position;
+                    }
+                }
+                let data = {
+                    id : socket.id,
+                    message : "map",
+                    players : sockets
+                }
+
+                for(var id in connections) {
+                    if (id !== socket.id) {
+                        connections[id].send(data.toString());
+                    }
+                }
+            }
+            
+            if (jsonData.message === "move") {
+                socket.position = {
+                    x: jsonData.data.x,
+                    y: jsonData.data.y
+                }
+            }
+
+
+            for(var id in connections) {
+                connections[id].send(data.toString());
             }
         })
 
         socket.on('disconnect', (data) => {
-            connections = removeElement(connections, socket);
+            delete connections[socket.id];
         })
     })
     
