@@ -36,14 +36,11 @@ function initWebSocket(server) {
                 socket.position = spawnPoints[randomIndex];
                 jsonData.data = socket.position;
 
-                for(var id in connections) {
-                    let getMap = {
-                        id : jsonData.id,
-                        message : "get_map"
-                    }
-                    connections[id].send(JSON.stringify(getMap))
-                    break
-                }
+                getMapFromClient(jsonData.id);
+            }
+
+            if (jsonData.message === "get_map") {
+                getMapFromClient(jsonData.id);
             }
             
             if (jsonData.message === "move") {
@@ -90,6 +87,20 @@ function initWebSocket(server) {
     wss.on('listening', () => {
         console.log("Server is now listening");
     })
+}
+
+function getMapFromClient(playerId) {
+
+    for(var id in connections) {
+        if (id !== playerId) {
+            let getMap = {
+                id : playerId,
+                message : "get_map"
+            }
+            connections[id].send(JSON.stringify(getMap))
+            break
+        }
+    }
 }
 
 function createBot(id) {
