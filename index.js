@@ -2,6 +2,13 @@ const {Server} = require("ws");
 
 const connections = {}
 
+const spawnPoints = [
+    {x : -12, y : -13},
+    {x : -12, y : 13},
+    {x : -12, y : 13},
+    {x : 12, y : 13}
+]
+
 function initWebSocket(server) {
     const wss = new Server({ server }, () => {
         console.log("start web server")
@@ -10,7 +17,6 @@ function initWebSocket(server) {
     console.log("init web socket: " + server);
 
     wss.on('connection', (socket) => {
-
         socket.on('message', (data) => {
 
             let jsonData = JSON.parse(data.toString());
@@ -19,30 +25,33 @@ function initWebSocket(server) {
                 socket.id = jsonData.id;
                 connections[jsonData.id] = socket;
 
+                let randomIndex = Math.floor(Math.random() * spawnPoints.length);
+                socket.position = spawnPoints[randomIndex];
+                jsonData.data = socket.position;
+
                 let sockets = {}
                 for(var id in connections) {
                     if (id !== socket.id) {
                         sockets[id] = connections[id].position;
                     }
                 }
-                let data = {
+                let map = {
                     id : socket.id,
                     message : "map",
-                    players : sockets
+                    data : sockets
                 }
-                socket.send(JSON.stringify(data));
+                
+                socket.send(JSON.stringify(map));
             }
             
             if (jsonData.message === "move") {
-                socket.position = {
-                    x: jsonData.data.x,
-                    y: jsonData.data.y
-                }
+                socket.position.x += jsonData.data.x;
+                socket.position.y += jsonData.data.y;
             }
 
 
             for(var id in connections) {
-                connections[id].send(data.toString());
+                connections[id].send(JSON.stringify(jsonData));
             }
         })
 
