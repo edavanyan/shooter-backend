@@ -2,6 +2,8 @@ const {Server} = require("ws");
 
 const connections = {}
 
+const c = []
+
 const spawnPoints = [
     {x : -12, y : -13},
     {x : -12, y : 13},
@@ -18,8 +20,13 @@ function initWebSocket(server) {
 
     wss.on('connection', (socket) => {
         socket.on('message', (data) => {
+            c.push(socket)
 
             let jsonData = JSON.parse(data.toString());
+
+            if (jsonData.message === "join_bot") {
+                createBot(jsonData.id);
+            }
 
             if (jsonData.message === "join") {
                 socket.id = jsonData.id;
@@ -29,19 +36,14 @@ function initWebSocket(server) {
                 socket.position = spawnPoints[randomIndex];
                 jsonData.data = socket.position;
 
-                let sockets = {}
                 for(var id in connections) {
-                    if (id !== socket.id) {
-                        sockets[id] = connections[id].position;
+                    let getMap = {
+                        id : id,
+                        message : "get_map"
                     }
+                    connections[id].send(JSON.stringify(getMap))
+                    break
                 }
-                let map = {
-                    id : socket.id,
-                    message : "map",
-                    data : sockets
-                }
-                
-                socket.send(JSON.stringify(map));
             }
             
             if (jsonData.message === "move") {
@@ -49,24 +51,50 @@ function initWebSocket(server) {
                 socket.position.y += jsonData.data.y;
             }
 
-
-            for(var id in connections) {
-                connections[id].send(JSON.stringify(jsonData));
+            if (jsonData.message === "map") {
+                let players = JSON.parse(jsonData.data);
+                for (let playerId in players) {
+                    console.log("id: " + playerId);
+                    players[playerId] = JSON.parse(players[playerId])
+                }
+                jsonData.data = players;
+                console.log(jsonData.data);
+                connections[jsonData.id].send(JSON.stringify(jsonData));
+            }
+            else
+            {
+                for(var id in connections) {
+                    connections[id].send(JSON.stringify(jsonData));
+                }
             }
         })
 
         socket.on('disconnect', (data) => {
             delete connections[socket.id];
+            removeElement(c, socket)
         })
 
         socket.on('close', (data) => {
             delete connections[socket.id];
+            removeElement(c, socket)
         })
     })
     
     wss.on('listening', () => {
         console.log("Server is now listening");
     })
+}
+
+function createBot(id) {
+    let jsonData = {};
+    jsonData.id = id
+    jsonData.message = "join";
+    let randomIndex = Math.floor(Math.random() * spawnPoints.length);
+    jsonData.data = spawnPoints[randomIndex];
+    
+    for( var i = 0; i < c.length; i++) {
+        c[i].send(JSON.stringify(jsonData));
+    }
 }
 
 function removeElement(arr, element) {
