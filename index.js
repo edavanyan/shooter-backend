@@ -7,7 +7,7 @@ const c = []
 const spawnPoints = [
     {x : -12, y : -13},
     {x : -12, y : 13},
-    {x : -12, y : 13},
+    {x : 12, y : -13},
     {x : 12, y : 13}
 ]
 
@@ -38,7 +38,7 @@ function initWebSocket(server) {
 
                 for(var id in connections) {
                     let getMap = {
-                        id : id,
+                        id : jsonData.id,
                         message : "get_map"
                     }
                     connections[id].send(JSON.stringify(getMap))
@@ -54,11 +54,9 @@ function initWebSocket(server) {
             if (jsonData.message === "map") {
                 let players = JSON.parse(jsonData.data);
                 for (let playerId in players) {
-                    console.log("id: " + playerId);
                     players[playerId] = JSON.parse(players[playerId])
                 }
                 jsonData.data = players;
-                console.log(jsonData.data);
                 connections[jsonData.id].send(JSON.stringify(jsonData));
             }
             else
@@ -70,13 +68,22 @@ function initWebSocket(server) {
         })
 
         socket.on('disconnect', (data) => {
+            console.log("disconnect");
             delete connections[socket.id];
             removeElement(c, socket)
+
         })
 
         socket.on('close', (data) => {
+            console.log("close");
             delete connections[socket.id];
             removeElement(c, socket)
+            let jsonData = {}
+            jsonData.id = socket.id
+            jsonData.message = "disconnect"
+            for(var id in connections) {
+                connections[id].send(JSON.stringify(jsonData));
+            }
         })
     })
     
