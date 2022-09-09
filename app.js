@@ -3,6 +3,7 @@ const app = express();
 const port = process.env.PORT || 8080;
 
 const index = require('./index')
+const game = require('./game')
 
 app.set("port", port);
 const server = app.listen(port, function(error) {
@@ -18,4 +19,4 @@ app.get('/test', function(req, res) {
     res.end();
 });
 
-index.initWebSocket(server);
+index.initWebSocket(server, game);

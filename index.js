@@ -11,7 +11,7 @@ const spawnPoints = [
     {x : 12, y : 13}
 ]
 
-function initWebSocket(server) {
+function initWebSocket(server, game) {
     const wss = new Server({ server }, () => {
         console.log("start web server")
     });
@@ -39,6 +39,13 @@ function initWebSocket(server) {
 
             if (jsonData.message == "respawn") {
                 jsonData.data = getSpawnPosition();
+            }
+
+            if (jsonData.message == "coin_pick") {
+                let removed = game.removeCoin(jsonData.data)
+                if (!removed) {
+                    return;
+                }
             }
 
             if (jsonData.message === "get_map") {
@@ -95,6 +102,10 @@ function getSpawnPosition () {
     return spawnPoint;
 }
 
+function isGameActive() {
+    return Object.keys(connections).length > 0
+}
+
 function getMapFromClient(playerId) {
 
     for(var id in connections) {
@@ -134,6 +145,17 @@ function removeElement(arr, element) {
     return arr;
 }
 
+function spawnCoin(coin) {
+    for(var id in connections) {
+        jsonData = {}
+        jsonData.message = "spawn_coin"
+        jsonData.data = coin;
+        connections[id].send(JSON.stringify(jsonData));
+    }
+}
+
 module.exports = {
-    initWebSocket
+    initWebSocket,
+    spawnCoin,
+    isGameActive
 }
