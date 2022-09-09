@@ -50,16 +50,21 @@ function initWebSocket(server, game) {
 
             if (jsonData.message === "get_map") {
                 getMapFromClient(jsonData.id);
+
             } else if (jsonData.message === "map") {
                 let players = JSON.parse(jsonData.data);
                 for (let playerId in players) {
                     players[playerId] = JSON.parse(players[playerId])
                 }
-                jsonData.data = players;
+                jsonData.data = {
+                    players : players,
+                    coins : game.coins
+                }
+                
                 if (connections[jsonData.id]) {
                     connections[jsonData.id].send(JSON.stringify(jsonData));
                 } else {
-                    console.error("attempring to send map to closed connection: " + jsonData.id)
+                    console.error("attempting to send map to closed connection: " + jsonData.id)
                 }
             }
             else
@@ -81,11 +86,17 @@ function initWebSocket(server, game) {
             console.log("close: " + socket.id);
             delete connections[socket.id];
             removeElement(c, socket)
+
             let jsonData = {}
             jsonData.id = socket.id
             jsonData.message = "disconnect"
+
             for(var id in connections) {
                 connections[id].send(JSON.stringify(jsonData));
+            }
+
+            if (!isGameActive()) {
+                game.clear()
             }
         })
     })
@@ -109,7 +120,7 @@ function isGameActive() {
 function getMapFromClient(playerId) {
 
     for(var id in connections) {
-        if (id !== playerId) {
+        if (id !== playerId) { 
             let getMap = {
                 id : playerId,
                 message : "get_map"
