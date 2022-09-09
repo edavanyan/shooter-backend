@@ -32,15 +32,14 @@ function initWebSocket(server) {
                 socket.id = jsonData.id;
                 connections[jsonData.id] = socket;
 
-                let randomIndex = Math.floor(Math.random() * spawnPoints.length);
-                socket.position = spawnPoints[randomIndex];
+                socket.position = getSpawnPosition();
                 jsonData.data = socket.position;
 
                 getMapFromClient(jsonData.id);
             }
 
-            if (jsonData.message === "get_map") {
-                getMapFromClient(jsonData.id);
+            if (jsonData.message == "respawn") {
+                jsonData.data = getSpawnPosition();
             }
             
             if (jsonData.message === "move") {
@@ -48,7 +47,10 @@ function initWebSocket(server) {
                 socket.position.y += jsonData.data.y;
             }
 
-            if (jsonData.message === "map") {
+
+            if (jsonData.message === "get_map") {
+                getMapFromClient(jsonData.id);
+            } else if (jsonData.message === "map") {
                 let players = JSON.parse(jsonData.data);
                 for (let playerId in players) {
                     players[playerId] = JSON.parse(players[playerId])
@@ -89,6 +91,11 @@ function initWebSocket(server) {
     })
 }
 
+function getSpawnPosition () {
+    let randomIndex = Math.floor(Math.random() * spawnPoints.length);
+    return spawnPoints[randomIndex];
+}
+
 function getMapFromClient(playerId) {
 
     for(var id in connections) {
@@ -117,7 +124,7 @@ function createBot(id) {
 
 function removeElement(arr, element) {
 
-    for( var i = 0; i < arr.length; i++) { 
+    for( var i = 0; i < arr.length; i++) {
     
         if ( arr[i] === element) { 
     
