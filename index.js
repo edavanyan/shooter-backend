@@ -32,8 +32,7 @@ function initWebSocket(server) {
                 socket.id = jsonData.id;
                 connections[jsonData.id] = socket;
 
-                socket.position = getSpawnPosition();
-                jsonData.data = socket.position;
+                jsonData.data = getSpawnPosition();
 
                 getMapFromClient(jsonData.id);
             }
@@ -41,12 +40,6 @@ function initWebSocket(server) {
             if (jsonData.message == "respawn") {
                 jsonData.data = getSpawnPosition();
             }
-            
-            if (jsonData.message === "move") {
-                socket.position.x += jsonData.data.x;
-                socket.position.y += jsonData.data.y;
-            }
-
 
             if (jsonData.message === "get_map") {
                 getMapFromClient(jsonData.id);
@@ -67,14 +60,14 @@ function initWebSocket(server) {
         })
 
         socket.on('disconnect', (data) => {
-            console.log("disconnect");
+            console.log("disconnect: " + socket.id);
             delete connections[socket.id];
             removeElement(c, socket)
 
         })
 
         socket.on('close', (data) => {
-            console.log("close");
+            console.log("close: " + socket.id);
             delete connections[socket.id];
             removeElement(c, socket)
             let jsonData = {}
@@ -93,7 +86,9 @@ function initWebSocket(server) {
 
 function getSpawnPosition () {
     let randomIndex = Math.floor(Math.random() * spawnPoints.length);
-    return spawnPoints[randomIndex];
+    let spawnPoint = spawnPoints[randomIndex];
+    console.log("spawn: " + spawnPoint.x + ", " + spawnPoint.y);
+    return spawnPoint;
 }
 
 function getMapFromClient(playerId) {
