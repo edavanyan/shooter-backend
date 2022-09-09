@@ -49,7 +49,11 @@ function initWebSocket(server) {
                     players[playerId] = JSON.parse(players[playerId])
                 }
                 jsonData.data = players;
-                connections[jsonData.id].send(JSON.stringify(jsonData));
+                if (connections[jsonData.id]) {
+                    connections[jsonData.id].send(JSON.stringify(jsonData));
+                } else {
+                    console.error("attempring to send map to closed connection: " + jsonData.id)
+                }
             }
             else
             {
