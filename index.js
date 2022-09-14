@@ -157,10 +157,11 @@ function removeElement(arr, element) {
 }
 
 function spawnCoin(coin) {
+    jsonData = {}
+    jsonData.id = "server"
+    jsonData.message = "spawn_coin"
+    jsonData.data = coin;
     for(var id in connections) {
-        jsonData = {}
-        jsonData.message = "spawn_coin"
-        jsonData.data = coin;
         connections[id].send(JSON.stringify(jsonData));
     }
 }
