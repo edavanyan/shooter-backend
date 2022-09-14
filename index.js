@@ -32,7 +32,7 @@ function initWebSocket(server, game) {
                 socket.id = jsonData.id;
                 connections[jsonData.id] = socket;
 
-                jsonData.data = {position : getSpawnPosition()};
+                jsonData.data = getSpawnPosition();
 
                 getMapFromClient(jsonData.id);
             }
