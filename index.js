@@ -41,7 +41,7 @@ function initWebSocket(server, game) {
                 jsonData.data = getSpawnPosition();
             }
 
-            if (jsonData.message == "coin_pick") {
+            if (jsonData.message == "aid_pick") {
                 let removed = game.removeCoin(jsonData.data)
                 if (!removed) {
                     return;
