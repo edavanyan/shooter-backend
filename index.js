@@ -51,13 +51,14 @@ function initWebSocket(server, game) {
             }
 
             if (jsonData.message === "get_map") {
+                console.log("get_map: " + jsonData.id)
                 getMapFromClient(jsonData.id);
 
             } else if (jsonData.message === "map") {
                 let players = JSON.parse(jsonData.data);
                 jsonData.data = {
                     players : players,
-                    coins : game.coins
+                    aids : game.coins
                 }
                 
                 if (connections[jsonData.id]) {
@@ -124,6 +125,7 @@ function getMapFromClient(playerId) {
                 id : playerId,
                 message : "get_map"
             }
+            console.log("get_map from: " + id)
             connections[id].send(JSON.stringify(getMap))
             break
         // }
