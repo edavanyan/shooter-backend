@@ -54,7 +54,9 @@ function initWebSocket(server, game) {
                 getMapFromClient(jsonData.id);
 
             } else if (jsonData.message === "map") {
+                console.log("string data = " + jsonData.data)
                 let mapData = JSON.parse(jsonData.data);
+                console.log("data = " + mapData)
                 let players = JSON.parse(mapData.data);
                 let receiverId = mapData.id.toString();
                 for(var id in players) {
