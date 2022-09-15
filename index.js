@@ -54,24 +54,25 @@ function initWebSocket(server, game) {
                 getMapFromClient(jsonData.id);
 
             } else if (jsonData.message === "map") {
-                console.log("string data = " + jsonData.data)
                 let mapData = JSON.parse(jsonData.data);
-                console.log("data = " + mapData)
+                
                 let players = JSON.parse(mapData.data);
                 let receiverId = mapData.id.toString();
                 for(var id in players) {
                     players[id] = JSON.parse(players[id]);
                 }
-                jsonData.data = {
-                    characters: players,
-                    aids: game.coins
-                }
+                game.getCoins(function (coins) {
+                    jsonData.data = {
+                        characters: players,
+                        aids: coins
+                    }
 
-                if (connections[receiverId]) {
-                    connections[receiverId].send(JSON.stringify(jsonData));
-                } else {
-                    console.error("attempting to send map to closed connection: " + jsonData.id)
-                }
+                    if (connections[receiverId]) {
+                        connections[receiverId].send(JSON.stringify(jsonData));
+                    } else {
+                        console.error("attempting to send map to closed connection: " + jsonData.id)
+                    }
+                })
             }
             else
             {

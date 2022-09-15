@@ -48,12 +48,15 @@ function removeCoin(id) {
     return false;
 }
 
+function getCoins(callBack) {
+    callBack(coins)
+}
+
 function clear() {
     coins = {}
 }
 
 module.exports = {
     removeCoin,
-    coins,
     clear
 }
