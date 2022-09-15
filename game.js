@@ -58,5 +58,6 @@ function clear() {
 
 module.exports = {
     removeCoin,
-    clear
+    clear,
+    getCoins
 }
