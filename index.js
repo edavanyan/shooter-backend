@@ -55,9 +55,6 @@ function initWebSocket(server, game) {
 
             } else if (jsonData.message === "map") {
                 let players = JSON.parse(jsonData.data);
-                for (let playerId in players) {
-                    players[playerId] = JSON.parse(players[playerId])
-                }
                 jsonData.data = {
                     players : players,
                     coins : game.coins
@@ -122,14 +119,14 @@ function isGameActive() {
 function getMapFromClient(playerId) {
 
     for(var id in connections) {
-        if (id !== playerId) { 
+        // if (id !== playerId) { 
             let getMap = {
                 id : playerId,
                 message : "get_map"
             }
             connections[id].send(JSON.stringify(getMap))
             break
-        }
+        // }
     }
 }
 
