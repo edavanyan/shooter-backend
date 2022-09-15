@@ -54,13 +54,13 @@ function initWebSocket(server, game) {
                 getMapFromClient(jsonData.id);
 
             } else if (jsonData.message === "map") {
-                console.log("map: " + JSON.stringify(jsonData.data))
                 let players = JSON.stringify(jsonData.data);
                 jsonData.data = {
                     characters : players,
                     aids : game.coins
                 }
-                
+
+                console.log("map: " + JSON.stringify(jsonData.data))
                 if (connections[jsonData.id]) {
                     connections[jsonData.id].send(JSON.stringify(jsonData));
                 } else {
