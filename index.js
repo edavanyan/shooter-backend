@@ -122,7 +122,7 @@ function isGameActive() {
 function getMapFromClient(playerId) {
 
     for(var id in connections) {
-        // if (id !== playerId) { 
+        if (id !== playerId) { 
             let getMap = {
                 id : playerId,
                 message : "get_map"
@@ -130,7 +130,7 @@ function getMapFromClient(playerId) {
             console.log("get_map from: " + id)
             connections[id].send(JSON.stringify(getMap))
             break
-        // }
+        }
     }
 }
 
