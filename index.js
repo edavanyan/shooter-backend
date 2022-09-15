@@ -55,7 +55,7 @@ function initWebSocket(server, game) {
 
             } else if (jsonData.message === "map") {
                 console.log("map: " + JSON.stringify(jsonData.data))
-                let players = jsonData.data;
+                let players = JSON.stringify(jsonData.data);
                 jsonData.data = {
                     characters : players,
                     aids : game.coins
