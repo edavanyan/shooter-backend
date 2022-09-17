@@ -88,13 +88,13 @@ function initWebSocket(server, game) {
 
         socket.on('disconnect', (data) => {
             console.log("disconnect: " + socket.id);
-            disconnect(socket.id)
+            disconnect(socket)
 
         })
 
         socket.on('close', (data) => {
             console.log("close: " + socket.id);
-            disconnect(socket.id)
+            disconnect(socket)
         })
     })
     
@@ -103,7 +103,7 @@ function initWebSocket(server, game) {
     })
 }
 
-function disconnect(id) {
+function disconnect(socket) {
     delete connections[socket.id];
     removeElement(c, socket)
 
