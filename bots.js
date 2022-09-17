@@ -23,8 +23,8 @@ function handleBot(map, callback) {
         let bot = undefined;
         // map.players = JSON.parse(map.players)
         for(var id in map.characters) {
-            console.log("bot player is: " + map.characters[id])
-            bot = JSON.parse(map.characters[id])
+            console.log("bot player is: " + map.characters[id].toString())
+            bot = map.characters[id].position
         }
         
         if (aid) {
@@ -32,7 +32,7 @@ function handleBot(map, callback) {
                 callback({error:"no such bot on map"})
                 return
             }
-            let move = subtract(bot.position, aid);
+            let move = subtract(bot, aid);
             let mag = magnitude(move);
             move = divide(move, mag);
             
