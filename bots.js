@@ -32,7 +32,7 @@ function handleBot(map, callback) {
                 callback({error:"no such bot on map"})
                 return
             }
-            let move = subtract(bot, aid);
+            let move = subtract(aid, bot);
             let mag = magnitude(move);
             move = divide(move, mag);
             
