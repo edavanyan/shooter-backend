@@ -21,31 +21,46 @@ function handleBot(map, callback) {
         }
 
         let bot = undefined;
-        // map.players = JSON.parse(map.players)
+        let player = undefined;
         for(var id in map.characters) {
             console.log("bot player is: " + map.characters[id].toString())
-            bot = map.characters[id].position
+            if (id === botId) {
+                bot = map.characters[id].position
+            } else {
+                player = map.characters[id].position
+            }
+        }
+        if (!bot) {
+            callback({error:"no such bot on map"})
+            return
         }
         
-        if (aid) {
-            if (!bot) {
-                callback({error:"no such bot on map"})
-                return
-            }
-            let move = subtract(aid, bot);
-            let mag = magnitude(move);
-            move = divide(move, mag);
+        if (player) {
+            let direction = subtract(player, bot);
+            let mag = magnitude(direction);
+            direction = divide(move, mag);
             
             let message = {
                 id: botId,
-                message: "move",
-                data: move
+                message: "fire",
+                data: direction                
             }
             callback(message)
-        } else {
-            callback({error:"no aid on map"})
-            return            
         }
+        
+        let move = {x:0, y:0}
+        if (aid) {
+            let move = subtract(aid, bot);
+            let mag = magnitude(move);
+            move = divide(move, mag);   
+        }
+
+        let message = {
+            id: botId,
+            message: "move",
+            data: move
+        }
+        callback(message)
         
     } else {
         callback({error:"no such bot in bots"})
