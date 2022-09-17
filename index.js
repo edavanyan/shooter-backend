@@ -40,10 +40,8 @@ function initWebSocket(server, game) {
                 console.log("join: " + socket.id)
                 if (Object.keys(connections).length == 1) {
                     let botInterval = setInterval(() => {
-                        console.log("create bot interval")
                         clearInterval(botInterval)
                         if (Object.keys(connections).length == 1) {
-                            console.log("create bot for user")
 
                             bots.createBot(function (bot) {
                                 console.log("create bot: " + bot.id)
@@ -52,11 +50,10 @@ function initWebSocket(server, game) {
                                     message: "join",
                                     data: getSpawnPosition()
                                 }
-
-                                setInterval(() => getMapFromClient(bot.id), 2000);
+                                const botId = bot.id;
+                                setInterval(() => getMapFromClient(botId), 2000);
 
                                 for (var id in connections) {
-                                    console.log("send bot to: " + id)
                                     connections[id].send(JSON.stringify(message));
                                 }
                             })
@@ -100,7 +97,8 @@ function initWebSocket(server, game) {
                     } else {
                         let map = jsonData.data;
                         map.id = receiverId;
-                        
+
+                        console.log("map for bot: " + map.id)
                         bots.handleBot(map, function (message) {
                             if (message.error) {
                                 console.error("attempting to send map to closed connection: " + jsonData.id)
