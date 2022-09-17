@@ -21,6 +21,7 @@ function handleBot(map, callback) {
         }
 
         let bot = undefined;
+        map.players = JSON.parse(map.players)
         for(var id in map.players) {
             console.log("bot player is: " + map.players[id])
             bot = JSON.parse(map.players[id])
