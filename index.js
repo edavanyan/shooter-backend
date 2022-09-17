@@ -6,9 +6,13 @@ const c = []
 
 const spawnPoints = [
     {x : -12, y : -13},
+    {x : -12, y : 0},
     {x : -12, y : 13},
     {x : 12, y : -13},
+    {x : 0, y : -13},
     {x : 12, y : 13}
+    {x : 0, y : 13}
+    {x : 12, y : 0}
 ]
 
 function initWebSocket(server, game) {
@@ -84,33 +88,36 @@ function initWebSocket(server, game) {
 
         socket.on('disconnect', (data) => {
             console.log("disconnect: " + socket.id);
-            delete connections[socket.id];
-            removeElement(c, socket)
+            disconnect(socket.id)
 
         })
 
         socket.on('close', (data) => {
             console.log("close: " + socket.id);
-            delete connections[socket.id];
-            removeElement(c, socket)
-
-            let jsonData = {}
-            jsonData.id = socket.id
-            jsonData.message = "disconnect"
-
-            for(var id in connections) {
-                connections[id].send(JSON.stringify(jsonData));
-            }
-
-            if (!isGameActive()) {
-                game.clear()
-            }
+            disconnect(socket.id)
         })
     })
     
     wss.on('listening', () => {
         console.log("Server is now listening");
     })
+}
+
+function disconnect(id) {
+    delete connections[socket.id];
+    removeElement(c, socket)
+
+    let jsonData = {}
+    jsonData.id = socket.id
+    jsonData.message = "disconnect"
+
+    for(var id in connections) {
+        connections[id].send(JSON.stringify(jsonData));
+    }
+
+    if (!isGameActive()) {
+        game.clear()
+    }    
 }
 
 function getSpawnPosition () {
