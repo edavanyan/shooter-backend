@@ -1,4 +1,5 @@
 const {Server} = require("ws");
+const bots = require("./bots.js")
 
 const connections = {}
 
@@ -28,10 +29,6 @@ function initWebSocket(server, game) {
 
             let jsonData = JSON.parse(data.toString());
 
-            if (jsonData.message === "join_bot") {
-                createBot(jsonData.id);
-            }
-
             if (jsonData.message === "join") {
                 socket.id = jsonData.id;
                 connections[jsonData.id] = socket;
@@ -39,6 +36,26 @@ function initWebSocket(server, game) {
                 jsonData.data = getSpawnPosition();
 
                 getMapFromClient(jsonData.id);
+                
+                let botInterval = setInterval(() {
+                    clearInterval(botInterval)
+                    if (Object.keys(connections) == 1) {
+                        bots.createBot(function(bot) {
+                            let message = {
+                                id: bot.id,
+                                message: "join",
+                                data: getSpawnPosition()
+                            }
+                            
+                            setInterval(() => getMapFromClient(bot.id), 2000);
+                            
+                            for(var id in connections) {
+                                connections[id].send(JSON.stringify(message));
+                            }
+
+                        })
+                    }
+                }, 3000f)
             }
 
             if (jsonData.message == "respawn") {
@@ -74,7 +91,18 @@ function initWebSocket(server, game) {
                     if (connections[receiverId]) {
                         connections[receiverId].send(JSON.stringify(jsonData));
                     } else {
-                        console.error("attempting to send map to closed connection: " + jsonData.id)
+                        let map = jsonData.data;
+                        map.id = receiverId;
+                        
+                        bots.handleBot(map, function (message) {
+                            if (message.error) {
+                                console.error("attempting to send map to closed connection: " + jsonData.id)
+                            } else {
+                                for(var id in connections) {
+                                    connections[id].send(JSON.stringify(message));
+                                }                                
+                            }
+                        })
                     }
                 })
             }
@@ -144,7 +172,6 @@ function getMapFromClient(playerId) {
                 id : playerId,
                 message : "get_map"
             }
-            console.log("get_map from: " + id)
             connections[id].send(JSON.stringify(getMap))
             break
         }
@@ -152,15 +179,17 @@ function getMapFromClient(playerId) {
 }
 
 function createBot(id) {
-    let jsonData = {};
-    jsonData.id = id
-    jsonData.message = "join";
-    let randomIndex = Math.floor(Math.random() * spawnPoints.length);
-    jsonData.data = spawnPoints[randomIndex];
-    
-    for( var i = 0; i < c.length; i++) {
-        c[i].send(JSON.stringify(jsonData));
-    }
+    bots.createBot(function (bot) {
+        let jsonData = {};
+        jsonData.id = bot.id
+        jsonData.message = "join";
+        let randomIndex = Math.floor(Math.random() * spawnPoints.length);
+        jsonData.data = spawnPoints[randomIndex];
+
+        for (var i = 0; i < c.length; i++) {
+            c[i].send(JSON.stringify(jsonData));
+        }
+    })
 }
 
 function removeElement(arr, element) {
