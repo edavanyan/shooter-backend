@@ -63,7 +63,7 @@ function initWebSocket(server, game) {
             }
 
             if (jsonData.message == "respawn") {
-                let id = jsonData.id;
+                let id = jsonData.data;
                 jsonData.data = {}
                 jsonData.data[id] = getSpawnPosition();
             }
