@@ -61,7 +61,8 @@ function findTargetAndMove(map, callback) {
         for(var id in map.characters) {
             if (id === botId) {
                 bot = map.characters[id].position
-                break;
+            } else {
+                player = map.characters[id].position
             }
         }
         if (!bot) {
@@ -70,12 +71,14 @@ function findTargetAndMove(map, callback) {
         }
         
         let move = {x:0, y:0}
-        if (aid) {
+        if (Math.random() > 0.4 && aid) {
             move = subtract(aid, bot);
             let mag = magnitude(move);
             move = divide(move, mag);   
-        } else {
-            console.log("no aid")
+        } else if (Math.random() < 0.9) {
+            move = subtract(player, bot)
+            let mag = magnitude(move);
+            move = divide(move, mag);
         }
 
         let message = {
