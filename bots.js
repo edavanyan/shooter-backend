@@ -28,7 +28,7 @@ function handleBot(map, callback) {
         
         if (aid) {
             if (!bot) {
-                callback({error:"no such bot"})
+                callback({error:"no such bot on map"})
                 return
             }
             let move = subtract(bot.position, aid);
@@ -41,10 +41,13 @@ function handleBot(map, callback) {
                 data: move
             }
             callback(message)
+        } else {
+            callback({error:"no aid on map"})
+            return            
         }
         
     } else {
-        callback({error:"no such bot"})
+        callback({error:"no such bot in bots"})
     }
 }
 
