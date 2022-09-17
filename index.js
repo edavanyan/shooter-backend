@@ -36,27 +36,33 @@ function initWebSocket(server, game) {
                 jsonData.data = getSpawnPosition();
 
                 getMapFromClient(jsonData.id);
-                
-                let botInterval = setInterval(() => {
-                    clearInterval(botInterval)
-                    if (Object.keys(connections) == 1) {
-                        
-                        bots.createBot(function(bot) {
-                            let message = {
-                                id: bot.id,
-                                message: "join",
-                                data: getSpawnPosition()
-                            }
-                            
-                            setInterval(() => getMapFromClient(bot.id), 2000);
-                            
-                            for(var id in connections) {
-                                connections[id].send(JSON.stringify(message));
-                            }
 
-                        })
-                    }
-                }, 3000)
+                console.log("join: " + socket.id)
+                if (Object.keys(connections) == 1) {
+                    let botInterval = setInterval(() => {
+                        console.log("create bot interval")
+                        clearInterval(botInterval)
+                        if (Object.keys(connections) == 1) {
+                            console.log("create bot for user")
+
+                            bots.createBot(function (bot) {
+                                console.log("create bot: " + bot.id)
+                                let message = {
+                                    id: bot.id,
+                                    message: "join",
+                                    data: getSpawnPosition()
+                                }
+
+                                setInterval(() => getMapFromClient(bot.id), 2000);
+
+                                for (var id in connections) {
+                                    console.log("send bot to: " + id)
+                                    connections[id].send(JSON.stringify(message));
+                                }
+                            })
+                        }
+                    }, 3000)
+                }
             }
 
             if (jsonData.message == "respawn") {
@@ -129,6 +135,7 @@ function initWebSocket(server, game) {
             disconnect(socket, function () {
                 if (!isGameActive()) {
                     game.clear()
+                    bots.clear()
                 }
             })
         })
@@ -157,7 +164,6 @@ function disconnect(socket, callback) {
 function getSpawnPosition () {
     let randomIndex = Math.floor(Math.random() * spawnPoints.length);
     let spawnPoint = spawnPoints[randomIndex];
-    console.log("spawn: " + spawnPoint.x + ", " + spawnPoint.y);
     return spawnPoint;
 }
 
