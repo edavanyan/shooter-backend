@@ -74,6 +74,8 @@ function findTargetAndMove(map, callback) {
             let move = subtract(aid, bot);
             let mag = magnitude(move);
             move = divide(move, mag);   
+        } else {
+            console.log("no aid")
         }
 
         let message = {
