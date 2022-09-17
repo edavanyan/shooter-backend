@@ -21,10 +21,10 @@ function handleBot(map, callback) {
         }
 
         let bot = undefined;
-        map.players = JSON.parse(map.players)
-        for(var id in map.players) {
-            console.log("bot player is: " + map.players[id])
-            bot = JSON.parse(map.players[id])
+        // map.players = JSON.parse(map.players)
+        for(var id in map.characters) {
+            console.log("bot player is: " + map.characters[id])
+            bot = JSON.parse(map.characters[id])
         }
         
         if (aid) {
