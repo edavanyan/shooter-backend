@@ -88,13 +88,20 @@ function initWebSocket(server, game) {
 
         socket.on('disconnect', (data) => {
             console.log("disconnect: " + socket.id);
-            disconnect(socket)
-
+            disconnect(socket, function () {
+                if (!isGameActive()) {
+                    game.clear()
+                }
+            })
         })
 
         socket.on('close', (data) => {
             console.log("close: " + socket.id);
-            disconnect(socket)
+            disconnect(socket, function () {
+                if (!isGameActive()) {
+                    game.clear()
+                }
+            })
         })
     })
     
@@ -103,7 +110,7 @@ function initWebSocket(server, game) {
     })
 }
 
-function disconnect(socket) {
+function disconnect(socket, callback) {
     delete connections[socket.id];
     removeElement(c, socket)
 
@@ -113,11 +120,9 @@ function disconnect(socket) {
 
     for(var id in connections) {
         connections[id].send(JSON.stringify(jsonData));
-    }
-
-    if (!isGameActive()) {
-        game.clear()
-    }    
+    }  
+    
+    callback();
 }
 
 function getSpawnPosition () {
