@@ -59,7 +59,7 @@ subtract = function (point1, point2) {
     return new Vector(point1.x - point2.x, point1.y - point2.y);
 }
 
-module.exports {
+module.exports = {
     createBot,
     handleBot
 }
