@@ -54,7 +54,7 @@ function handleBot(map, callback) {
 
 
 divide = function (point, scalar) {
-    return new Vector(point.x / scalar, point.y / scalar);
+    return {x: point.x / scalar, y: point.y / scalar};
 };
 
 
@@ -63,7 +63,7 @@ magnitude = function (point) {
 }
 
 subtract = function (point1, point2) {
-    return new Vector(point1.x - point2.x, point1.y - point2.y);
+    return {x: point1.x - point2.x, y : point1.y - point2.y};
 }
 
 function clear() {
