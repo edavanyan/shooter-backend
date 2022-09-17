@@ -71,7 +71,7 @@ function findTargetAndMove(map, callback) {
         
         let move = {x:0, y:0}
         if (aid) {
-            let move = subtract(aid, bot);
+            move = subtract(aid, bot);
             let mag = magnitude(move);
             move = divide(move, mag);   
         } else {
