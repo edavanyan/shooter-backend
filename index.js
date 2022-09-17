@@ -56,7 +56,7 @@ function initWebSocket(server, game) {
 
                         })
                     }
-                }, 3000f)
+                }, 3000)
             }
 
             if (jsonData.message == "respawn") {
