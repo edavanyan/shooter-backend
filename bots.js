@@ -13,34 +13,39 @@ function createBot(callback) {
 }
 
 function findTargetAndFire(map, callback) {
-    let bot = undefined;
-    let player = undefined;
-    for(var id in map.characters) {
-        console.log("bot player is: " + map.characters[id].toString())
-        if (id === botId) {
-            bot = map.characters[id].position
+    let botId = map.id;
+    if (bots[botId]) {
+        let bot = undefined;
+        let player = undefined;
+        for(var id in map.characters) {
+            console.log("bot player is: " + map.characters[id].toString())
+            if (id === botId) {
+                bot = map.characters[id].position
+            } else {
+                player = map.characters[id].position
+            }
+        }
+        if (!bot) {
+            callback({error:"no such bot on map"})
+            return
+        }
+    
+        if (player) {
+            let direction = subtract(player, bot);
+            let mag = magnitude(direction);
+            direction = divide(direction, mag);
+    
+            let message = {
+                id: botId,
+                message: "fire",
+                data: direction
+            }
+            callback(message)
         } else {
-            player = map.characters[id].position
+            callback({error: "no playree to shoot"})
         }
-    }
-    if (!bot) {
-        callback({error:"no such bot on map"})
-        return
-    }
-
-    if (player) {
-        let direction = subtract(player, bot);
-        let mag = magnitude(direction);
-        direction = divide(direction, mag);
-
-        let message = {
-            id: botId,
-            message: "fire",
-            data: direction
-        }
-        callback(message)
     } else {
-        callback({error: "no playree to shoot"})
+        callback({error:"no such bot in bots"})
     }
 }
 
