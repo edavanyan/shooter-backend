@@ -18,7 +18,6 @@ function findTargetAndFire(map, callback) {
         let bot = undefined;
         let player = undefined;
         for(var id in map.characters) {
-            console.log("bot player is: " + map.characters[id].toString())
             if (id === botId) {
                 bot = map.characters[id].position
             } else {
@@ -60,7 +59,6 @@ function findTargetAndMove(map, callback) {
         let bot = undefined;
         let player = undefined;
         for(var id in map.characters) {
-            console.log("bot player is: " + map.characters[id].toString())
             if (id === botId) {
                 bot = map.characters[id].position
                 break;

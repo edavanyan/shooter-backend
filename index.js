@@ -101,6 +101,7 @@ function initWebSocket(server, game) {
                         console.log("map for bot: " + map.id)
                         if (Math.random() < 0.25)
                         {
+                            console.log("move bot")
                             bots.findTargetAndMove(map, sendBotMessage)
                         } 
                         else
