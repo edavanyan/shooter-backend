@@ -47,7 +47,7 @@ function initWebSocket(server, game) {
                                 console.log("create bot: " + bot.id)
                                 let message = {
                                     id: bot.id,
-                                    message: "join",
+                                    message: "join_bot",
                                     data: getSpawnPosition()
                                 }
                                 const botId = bot.id;
@@ -100,7 +100,6 @@ function initWebSocket(server, game) {
 
                         if (Math.random() < 0.25)
                         {
-                            console.log("move bot")
                             bots.findTargetAndMove(map, sendBotMessage)
                         } 
                         else
