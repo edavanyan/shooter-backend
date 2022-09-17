@@ -12,7 +12,39 @@ function createBot(callback) {
     callback(bot)
 }
 
-function handleBot(map, callback) {
+function findTargetAndFire(map, callback) {
+    let bot = undefined;
+    let player = undefined;
+    for(var id in map.characters) {
+        console.log("bot player is: " + map.characters[id].toString())
+        if (id === botId) {
+            bot = map.characters[id].position
+        } else {
+            player = map.characters[id].position
+        }
+    }
+    if (!bot) {
+        callback({error:"no such bot on map"})
+        return
+    }
+
+    if (player) {
+        let direction = subtract(player, bot);
+        let mag = magnitude(direction);
+        direction = divide(direction, mag);
+
+        let message = {
+            id: botId,
+            message: "fire",
+            data: direction
+        }
+        callback(message)
+    } else {
+        callback({error: "no playree to shoot"})
+    }
+}
+
+function findTargetAndMove(map, callback) {
     let botId = map.id;
     if (bots[botId]) {
         let aid = undefined;
@@ -26,26 +58,12 @@ function handleBot(map, callback) {
             console.log("bot player is: " + map.characters[id].toString())
             if (id === botId) {
                 bot = map.characters[id].position
-            } else {
-                player = map.characters[id].position
+                break;
             }
         }
         if (!bot) {
             callback({error:"no such bot on map"})
             return
-        }
-        
-        if (player) {
-            let direction = subtract(player, bot);
-            let mag = magnitude(direction);
-            direction = divide(direction, mag);
-            
-            let message = {
-                id: botId,
-                message: "fire",
-                data: direction                
-            }
-            callback(message)
         }
         
         let move = {x:0, y:0}
@@ -87,6 +105,7 @@ function clear() {
 
 module.exports = {
     createBot,
-    handleBot,
+    findTargetAndMove,
+    findTargetAndFire,
     clear
 }

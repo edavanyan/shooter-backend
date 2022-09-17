@@ -51,7 +51,7 @@ function initWebSocket(server, game) {
                                     data: getSpawnPosition()
                                 }
                                 const botId = bot.id;
-                                setInterval(() => getMapFromClient(botId), 2000);
+                                setInterval(() => getMapFromClient(botId), 500);
 
                                 for (var id in connections) {
                                     connections[id].send(JSON.stringify(message));
@@ -99,15 +99,23 @@ function initWebSocket(server, game) {
                         map.id = receiverId;
 
                         console.log("map for bot: " + map.id)
-                        bots.handleBot(map, function (message) {
+                        let sendBotMessage = function (message) {
                             if (message.error) {
                                 console.error(message.error)
                             } else {
                                 for(var id in connections) {
                                     connections[id].send(JSON.stringify(message));
-                                }                                
+                                }
                             }
-                        })
+                        };
+                        if (Math.random() < 0.25f)
+                        {
+                            bots.findTargetAndMove(map, sendBotMessage)
+                        } 
+                        else
+                        {
+                            bots.findTargetAndFire(map, sendBotMessage)
+                        }
                     }
                 })
             }
