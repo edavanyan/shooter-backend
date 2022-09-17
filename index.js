@@ -37,9 +37,10 @@ function initWebSocket(server, game) {
 
                 getMapFromClient(jsonData.id);
                 
-                let botInterval = setInterval(() {
+                let botInterval = setInterval(() => {
                     clearInterval(botInterval)
                     if (Object.keys(connections) == 1) {
+                        
                         bots.createBot(function(bot) {
                             let message = {
                                 id: bot.id,
