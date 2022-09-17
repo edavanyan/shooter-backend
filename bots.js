@@ -38,7 +38,7 @@ function handleBot(map, callback) {
         if (player) {
             let direction = subtract(player, bot);
             let mag = magnitude(direction);
-            direction = divide(move, mag);
+            direction = divide(direction, mag);
             
             let message = {
                 id: botId,
