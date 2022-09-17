@@ -101,7 +101,7 @@ function initWebSocket(server, game) {
                         console.log("map for bot: " + map.id)
                         bots.handleBot(map, function (message) {
                             if (message.error) {
-                                console.error(error.message)
+                                console.error(message.error)
                             } else {
                                 for(var id in connections) {
                                     connections[id].send(JSON.stringify(message));
