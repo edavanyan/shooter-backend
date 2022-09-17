@@ -38,11 +38,11 @@ function initWebSocket(server, game) {
                 getMapFromClient(jsonData.id);
 
                 console.log("join: " + socket.id)
-                if (Object.keys(connections) == 1) {
+                if (Object.keys(connections).length == 1) {
                     let botInterval = setInterval(() => {
                         console.log("create bot interval")
                         clearInterval(botInterval)
-                        if (Object.keys(connections) == 1) {
+                        if (Object.keys(connections).length == 1) {
                             console.log("create bot for user")
 
                             bots.createBot(function (bot) {
