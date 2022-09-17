@@ -4,8 +4,10 @@ bots = {}
 
 function createBot(callback) {
     const id = crypto.randomBytes(16).toString("hex");
-    let bot = {}
-    bot[id] = bots[id]
+    let bot = {
+        id : id
+    }
+    bots[id] = bot;
     
     callback(bot)
 }
