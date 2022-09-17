@@ -99,16 +99,7 @@ function initWebSocket(server, game) {
                         map.id = receiverId;
 
                         console.log("map for bot: " + map.id)
-                        let sendBotMessage = function (message) {
-                            if (message.error) {
-                                console.error(message.error)
-                            } else {
-                                for(var id in connections) {
-                                    connections[id].send(JSON.stringify(message));
-                                }
-                            }
-                        };
-                        if (Math.random() < 0.25f)
+                        if (Math.random() < 0.25)
                         {
                             bots.findTargetAndMove(map, sendBotMessage)
                         } 
@@ -151,6 +142,16 @@ function initWebSocket(server, game) {
         console.log("Server is now listening");
     })
 }
+
+let sendBotMessage = function (message) {
+    if (message.error) {
+        console.error(message.error)
+    } else {
+        for(var id in connections) {
+            connections[id].send(JSON.stringify(message));
+        }
+    }
+};
 
 function disconnect(socket, callback) {
     delete connections[socket.id];
