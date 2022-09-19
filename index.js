@@ -60,7 +60,7 @@ function initWebSocket(server, game) {
                             } else {
                                 console.error(error.message)
                             }
-                        }
+                        })
                     }
                 }
                 
