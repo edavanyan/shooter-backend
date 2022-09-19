@@ -185,6 +185,10 @@ function disconnect(socket, callback) {
         connections[id].send(JSON.stringify(jsonData));
     }  
     
+    if (Object.keys(connections).length == 1) {
+        setupBot()
+    }
+    
     callback();
 }
 
