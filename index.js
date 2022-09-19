@@ -33,6 +33,7 @@ function initWebSocket(server, game) {
 
             if (jsonData.message === "join") {
                 socket.id = jsonData.id;
+                connections[jsonData.id] = socket;
 
                 jsonData.data = getSpawnPosition();
 
@@ -63,8 +64,6 @@ function initWebSocket(server, game) {
                         })
                     }
                 }
-                
-                connections[jsonData.id] = socket;
             }
 
             if (jsonData.message == "respawn") {
