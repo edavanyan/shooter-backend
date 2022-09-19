@@ -40,7 +40,7 @@ function initWebSocket(server, game) {
                 getMapFromClient(jsonData.id);
 
                 console.log("join: " + socket.id)
-                if (Object.keys(connections).length == 0) {
+                if (Object.keys(connections).length == 1) {
                     setupBot();
                 } else {
                     if (botActionInterval) {
@@ -150,7 +150,6 @@ function setupBot() {
     let botCreateInterval = setInterval(() => {
         clearInterval(botCreateInterval)
         if (Object.keys(connections).length == 1) {
-
             bots.createBot(function (bot) {
                 console.log("create bot: " + bot.id)
                 let message = {
