@@ -47,21 +47,24 @@ function initWebSocket(server, game) {
                         clearInterval(botActionInterval)
                         botActionInterval = undefined
                         
-                        bots.disconnectBot((botId, error) => {
-                            if (!error) {
-                                let message = {
-                                    id: botId,
-                                    message: "disconnect",
-                                    data: ""
+                        let disconnectBotInterval = setInterval(() => {
+                            clearInterval(disconnectBotInterval)
+                            bots.disconnectBot((botId, error) => {
+                                if (!error) {
+                                    let message = {
+                                        id: botId,
+                                        message: "disconnect",
+                                        data: ""
+                                    }
+                                    for (var id in connections) {
+                                        connections[id].send(JSON.stringify(message));
+                                    }
+                                    bots.clear()
+                                } else {
+                                    console.error(error.message)
                                 }
-                                for (var id in connections) {
-                                    connections[id].send(JSON.stringify(message));
-                                }
-                                bots.clear()
-                            } else {
-                                console.error(error.message)
-                            }
-                        })
+                            })
+                        }, 1000)
                     }
                 }
             }
@@ -210,7 +213,7 @@ function isGameActive() {
 function getMapFromClient(playerId) {
 
     for(var id in connections) {
-        if (id !== playerId) { 
+        if (id !== playerId) {
             let getMap = {
                 id : playerId,
                 message : "get_map"
