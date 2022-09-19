@@ -45,15 +45,22 @@ function initWebSocket(server, game) {
                     if (botActionInterval) {
                         clearInterval(botActionInterval)
                         botActionInterval = undefined
-                        let message = {
-                            id: bot.id,
-                            message: "disconnect",
-                            data: ""
+                        
+                        bots.disconnectBot((botId, error) => {
+                            if (!error) {
+                                let message = {
+                                    id: botId,
+                                    message: "disconnect",
+                                    data: ""
+                                }
+                                for (var id in connections) {
+                                    connections[id].send(JSON.stringify(message));
+                                }
+                                bots.clear()
+                            } else {
+                                console.error(error.message)
+                            }
                         }
-                        for (var id in connections) {
-                            connections[id].send(JSON.stringify(message));
-                        }
-                        bots.clear()
                     }
                 }
                 

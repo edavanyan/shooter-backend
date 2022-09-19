@@ -93,6 +93,17 @@ function findTargetAndMove(map, callback) {
     }
 }
 
+function disconnectBot(callback) {
+    let botId = undefined
+    for(var id in bots) {
+        botId = id
+    }
+    if (botId) {
+        callback(botId)
+    } else {
+        callback("", {message:"no bot"})
+    }
+}
 
 divide = function (point, scalar) {
     return {x: point.x / scalar, y: point.y / scalar};
@@ -115,5 +126,6 @@ module.exports = {
     createBot,
     findTargetAndMove,
     findTargetAndFire,
-    clear
+    clear,
+    disconnectBot
 }
